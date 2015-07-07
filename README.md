@@ -156,7 +156,7 @@ Compose reading from a DB, and writing each record to a file.
 See: https://github.com/gerritjvv/rclosure/blob/master/clojure/src/rclosure/core.clj
 
 
-```
+```clojure
 (defn run-once
       "Takes an environment and a resource closure gen (or composed gen from rcompose)
        instantiates a resource closure and runs it, the finally closes the resource closure
