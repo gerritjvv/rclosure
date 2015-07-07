@@ -1,9 +1,10 @@
 # rclosure
 
+Simple composable resource functions, using the humble closure.
 
 # Overview
 
-Here I present a pattern for creating and composing "Resource Closures", named so  
+A pattern for creating and composing "Resource Closures", named so  
 because they are functions that close over resources that need to be opened and closed. 
   
 Normal function composition does not contemplate resource opening and closing.
