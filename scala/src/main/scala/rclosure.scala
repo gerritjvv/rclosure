@@ -1,7 +1,5 @@
-import scala.collection.immutable.{HashMap, Map}
-
-val EMPTY_MAP = new HashMap[String, Any]()
-
+package rclosure {
+  import scala.collection.immutable.Map
 
 /**
  * Describes a resource closure
@@ -51,6 +49,8 @@ trait RClosureFactory {
 
 
 object RC {
+  import scala.collection.immutable.HashMap
+  val EMPTY_MAP = new HashMap[String, Any]();
 
   /**
    * Run the rClosureGen once by applying <br/>
@@ -100,5 +100,7 @@ object RC {
     else
       fs.reverse.foldLeft(f)((rcg: RClosureGen[ENV, STATE, V], rcf: RClosureFactory) => rcf.apply(rcg))
   }
+
+}
 
 }

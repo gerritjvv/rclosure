@@ -1,6 +1,6 @@
 (ns rclosure.core-test
   (:require [clojure.test :refer :all]
-            [rclosure.core :as rclosure]))
+            [rclosure.example :as rclosure]))
 
 
 (deftest testrun
