@@ -153,9 +153,60 @@ Compose reading from a DB, and writing each record to a file.
 
 ### Clojure
 
-```
+See: https://github.com/gerritjvv/rclosure/blob/master/clojure/src/rclosure/core.clj
+
 
 ```
+(defn run-once
+      "Takes an environment and a resource closure gen (or composed gen from rcompose)
+       instantiates a resource closure and runs it, the finally closes the resource closure
+       the result of the resource closure is returned"
+      [env f]
+      {:pre [(not (fn? env)) (fn? f)]}
+      (let [rc (f env)]
+           (try
+             (rc (rc) nil)
+             (finally (rc {})))))
+
+(defn rcompose
+      "Compose all functions in f1, f2 and fs from left to right.
+       [f1 f2 f3] becomes (f1 (f2 f3))
+       All other functions but the last should be factory functions and return resource closure gens
+       which in turn return resource closures. i.e
+       rc-g = (f1 fN)
+       rc = (rc-g env)
+       init = (rc)
+       v = (rc init vN)
+       (rc) ; close
+       The last function should be a resource closure gen
+       Returns a resource closure gen"
+      [f1 f2 & fs]
+      {:pre [(fn? f1) (fn? f2) (or (not fs) (coll? fs))]}
+      (if fs
+        (let [[a b & rs] (reverse (cons f1 (cons f2 fs)))
+              rcg (b a)]
+             ;[f1 f2 f3 f4], reverse [f4 f3 f2 f1]
+             ;a = f4, b = f3, rs = [f2 f1], rc-g = (f4 f3), then reduce (fN rc-g)
+             (reduce (fn [rcgN f]
+                         (f rcgN)) rcg rs))
+        (f1 f2)))
+
+(defn dummy-main [n]
+      (run-once
+
+        {:sql      "select * from test"
+         :jdbc-url (setup-db "jdbc:hsqldb:mem:mymemdb" "SA" "" n)
+         :user     "SA"
+         :pwd      ""
+         :file     "/tmp/myfile.txt"}
+
+        (rcompose read-from-db
+                  monitor-output
+                  write-to-file)))
+```
+
+### Scala
+
 ### Haskell
 
 ### Java Script
@@ -163,3 +214,5 @@ Compose reading from a DB, and writing each record to a file.
 ### Go
 
 ### Ruby
+
+### Rust
