@@ -208,6 +208,65 @@ See: https://github.com/gerritjvv/rclosure/blob/master/clojure/src/rclosure/core
 
 ### Scala
 
+```scala
+package rclosure {
+  import scala.collection.immutable.Map
+
+/**
+ * Describes a resource closure
+ */
+trait RClosure[STATE, V] {
+
+  def apply(): STATE
+
+  def apply(state: STATE, v: V): STATE
+
+  def apply(closeMap: Map[String, Any]): Unit
+
+}
+
+/**
+ * Describes a resource closure generator
+ */
+trait RClosureGen[ENV, STATE, V] {
+  def apply(env: ENV): RClosure[STATE, V]
+}
+
+/**
+ * Describes a resource closure factory that returns resource closure generators
+ */
+trait RClosureFactory {
+  def apply[ENV, STATE, V](f: RClosureGen[ENV, STATE, V]): RClosureGen[ENV, STATE, V]
+}
+
+
+object RC {
+  import scala.collection.immutable.HashMap
+  val EMPTY_MAP = new HashMap[String, Any]();
+
+  def runOnce[ENV, STATE, V](env: ENV, rcg: RClosureGen[ENV, STATE, V]): STATE = {
+    val rc = rcg.apply(env)
+    try
+      rc.apply(rc.apply(), Nil.asInstanceOf[V])
+    finally
+      rc.apply(EMPTY_MAP)
+  }
+
+  def rcompose[ENV, STATE, V](f2: RClosureGen[ENV, STATE, V], f1: RClosureFactory) = f1.apply[ENV, STATE, V](f2)
+
+  
+  def rcompose[ENV, STATE, V](f: RClosureGen[ENV, STATE, V], fs: RClosureFactory*) = {
+    if (fs.isEmpty)
+      f
+    else
+      fs.reverse.foldLeft(f)((rcg: RClosureGen[ENV, STATE, V], rcf: RClosureFactory) => rcf.apply(rcg))
+  }
+
+}
+
+}
+```
+
 ### Haskell
 
 ### Java Script
