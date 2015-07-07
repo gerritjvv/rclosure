@@ -154,7 +154,7 @@ Compose reading from a DB, and writing each record to a file.
 
 ### Clojure
 
-See: https://github.com/gerritjvv/rclosure/blob/master/clojure/src/rclosure/core.clj
+See: https://github.com/gerritjvv/rclosure/blob/master/clojure/test/rclosure/example.clj
 
 
 ```clojure
