@@ -74,12 +74,11 @@
       [f1 f2 & fs]
       {:pre [(fn? f1) (fn? f2) (or (not fs) (coll? fs))]}
       (if fs
-        (let [[a b & rs] (reverse (cons f1 (cons f2 fs)))
-              rcg (b a)]
-             ;[f1 f2 f3 f4], reverse [f4 f3 f2 f1]
-             ;a = f4, b = f3, rs = [f2 f1], rc-g = (f4 f3), then reduce (fN rc-g)
-             (reduce (fn [rcgN f]
-                         (f rcgN)) rcg rs))
+        (let [[a & rs] (reverse fs)]
+             ;a is a resource gen
+             ;rs are resource factories
+             (f1 (f2 (reduce (fn [rcgN f]
+                                 (f rcgN)) a rs))))
         (f1 f2)))
 
 
