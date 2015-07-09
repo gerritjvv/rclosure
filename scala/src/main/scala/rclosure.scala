@@ -1,5 +1,6 @@
-package rclosure {
-  import scala.collection.immutable.Map
+package rclosure
+
+import scala.collection.immutable.Map
 
 /**
  * Describes a resource closure
@@ -100,7 +101,5 @@ object RC {
     else
       fs.reverse.foldLeft(f)((rcg: RClosureGen[ENV, STATE, V], rcf: RClosureFactory) => rcf.apply(rcg))
   }
-
-}
 
 }
