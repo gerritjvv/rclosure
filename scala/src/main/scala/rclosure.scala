@@ -1,5 +1,6 @@
 package rclosure
 
+
 import scala.collection.immutable.Map
 
 /**
@@ -27,7 +28,7 @@ trait RClosure[STATE, V] {
    * Close
    * @param closeMap
    */
-  def apply(closeMap: Map[String, Any]): Unit
+  def apply(closeMap: scala.collection.immutable.Map[String, Any]): Unit
 
 }
 
