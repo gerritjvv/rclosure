@@ -11,7 +11,7 @@ import scala.collection.immutable.Map
 trait RClosure[STATE, V] {
 
   /**
-   * Init
+   * Return init state
    * @return
    */
   def apply(): STATE

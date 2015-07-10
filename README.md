@@ -209,19 +209,30 @@ See: https://github.com/gerritjvv/rclosure/blob/master/clojure/test/rclosure/exa
 ### Scala
 
 ```scala
-package rclosure {
-  import scala.collection.immutable.Map
+package rclosure
+
+
+import scala.collection.immutable.Map
 
 /**
  * Describes a resource closure
  */
 trait RClosure[STATE, V] {
 
+  /**
+   * Init state
+   */
   def apply(): STATE
 
+  /**
+   * Run
+   */
   def apply(state: STATE, v: V): STATE
 
-  def apply(closeMap: Map[String, Any]): Unit
+  /**
+   * Close
+   */
+  def apply(closeMap: scala.collection.immutable.Map[String, Any]): Unit
 
 }
 
@@ -244,6 +255,13 @@ object RC {
   import scala.collection.immutable.HashMap
   val EMPTY_MAP = new HashMap[String, Any]();
 
+  /**
+   * Run the rClosureGen once by applying <br/>
+   * <pre>
+   * rc = rcg.apply(env)
+   * try rc.apply(rc.apply(), Nil) finally rc.apply(HashMap)
+   * </pre>
+   */
   def runOnce[ENV, STATE, V](env: ENV, rcg: RClosureGen[ENV, STATE, V]): STATE = {
     val rc = rcg.apply(env)
     try
@@ -252,9 +270,14 @@ object RC {
       rc.apply(EMPTY_MAP)
   }
 
+  /**
+   * Compose one resource closure factory and resource closure gen
+   */
   def rcompose[ENV, STATE, V](f2: RClosureGen[ENV, STATE, V], f1: RClosureFactory) = f1.apply[ENV, STATE, V](f2)
 
-  
+  /**
+   * Compose a list of resource closure factories with a last resource closure gen
+  */
   def rcompose[ENV, STATE, V](f: RClosureGen[ENV, STATE, V], fs: RClosureFactory*) = {
     if (fs.isEmpty)
       f
@@ -263,7 +286,6 @@ object RC {
   }
 
 }
-
 }
 ```
 
