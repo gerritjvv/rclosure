@@ -1,4 +1,4 @@
-(defproject rclosure "0.1.0-SNAPSHOT"
+(defproject rclosure "0.1.0"
   :description "resource closures"
   :url "https://github.com/gerritjvv/rclosure"
   :license {:name "Eclipse Public License"

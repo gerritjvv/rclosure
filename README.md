@@ -208,6 +208,7 @@ See: https://github.com/gerritjvv/rclosure/blob/master/clojure/test/rclosure/exa
 
 ### Scala
 
+Note: Note, scala seems to use
 ```scala
 package rclosure
 
